@@ -30,10 +30,6 @@ async def phb(ctx):
     await ctx.send("A link to the player's handbook: http://orc-news.ru/dnd5eng.pdf")
 
 @client.command() # TOIMII
-async def gheotak(ctx):
-    await ctx.send(random.choice(['Evil! :>', 'Made a few deals...', 'Loves Hilda']))
-
-@client.command() # TOIMII
 async def d4(ctx):
     d4 = list(range(1,5))
     await ctx.send(random.choice(d4))
