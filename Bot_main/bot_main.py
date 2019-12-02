@@ -103,4 +103,88 @@ async def leave(ctx):
         print("Bot was told to leave voice channel, but was not in one")
         await ctx.send("Don't think I am in a voice channel")
 
+@client.command(pass_context=True, aliases=['p', 'pla'])
+async def play(ctx, url: str):
+    song_there = os.path.isfile("song.mp3")
+    try:
+        if song_there:
+            os.remove("song.mp3")
+            print("Removed old song file")
+    except PermissionError:
+        print("Trying to remove song file, but it is being played")
+        await ctx.send("ERROR: Music Playing")
+        return
+
+    await ctx.send("Getting everything ready to rock!")
+
+    voice = get(client.voice_clients, guild=ctx.guild)
+
+    ydl_opts = {
+        'format': 'bestaudio/best',
+        'quiet': True,
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
+    }
+
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        print("Downloading audio now\n")
+        ydl.download([url])
+
+    for file in os.listdir("./"):
+        if file.endswith(".mp3"):
+            name = file
+            print(f"Renamed File: {file}\n")
+            os.rename(file, "song.mp3")
+
+    voice.play(discord.FFmpegPCMAudio("song.mp3"), after=lambda e: print(f"{name} has finished playing"))
+    voice.source = discord.PCMVolumeTransformer(voice.source)
+    voice.source.volume = 0.05
+
+    nname = name.rsplit("-", 2)
+    await ctx.send(f"Playing: {nname[0]}")
+    print("Playing\n")
+
+@client.command(pass_context=True, aliases=['pa', 'pau'])
+async def pause(ctx):
+
+    voice = get(client.voice_clients, guild=ctx.guild)
+
+    if voice and voice.is_playing():
+        print("Song paused")
+        voice.pause()
+        await ctx.send("Song paused")
+    else:
+        print("Song is not playing, failed pause")
+        await ctx.send("Song is not playing, failed pause")
+
+@client.command(pass_context=True, aliases=['r', 'res'])
+async def resume(ctx):
+
+    voice = get(client.voice_clients, guild=ctx.guild)
+
+    if voice and voice.is_paused():
+        print("Song resumed")
+        voice.resume()
+        await ctx.send("Song resumed")
+    else:
+        print("Song is not paused")
+        await ctx.send("Song is not paused")
+
+@client.command(pass_context=True, aliases=['s', 'sto'])
+async def stop(ctx):
+
+    voice = get(client.voice_clients, guild=ctx.guild)
+
+    if voice and voice.is_playing():
+        print("Song stopped")
+        voice.stop()
+        await ctx.send("Song stopped")
+    else:
+        print("Song is not playing, failed stop")
+        await ctx.send("Song is not playing, failed stop")
+
+
 client.run(token)
