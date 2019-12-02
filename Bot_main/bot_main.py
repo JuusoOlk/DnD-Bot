@@ -3,6 +3,7 @@ import os
 import random
 from discord.ext import commands
 from discord.ext.commands import Bot
+import asyncio
 
 client = commands.Bot(command_prefix='!')
 
@@ -63,5 +64,5 @@ async def d20(ctx):
 async def d100(ctx):
     d100 = list(range(1,101))
     await ctx.send(random.choice(d100))
-
+    
 client.run(token)
