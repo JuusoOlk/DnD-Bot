@@ -11,24 +11,28 @@ import asyncio
 import sqlite3
 from ctypes.util import find_library
 
+# Libraries used: asyncio, youtubedl
+# discord.py framework
+#SQLite database
+
+# Prefix defines the key for commanding the bot e.g. !play
 client = commands.Bot(command_prefix='!')
 
-
+# Reads the unique discord client token from the text-file
 def read_token():
     with open("token.txt", "r") as f:
         lines = f.readlines()
         return lines[0].strip()
 
-
 token = read_token()
 
 dclient = Bot('!')
 
-#connection for database
+# Connects to the SQLite-database
 conn = sqlite3.connect('diceroll.db')
 c = conn.cursor()
 
-    #tries to create database if its the first time the application runs
+# Tries to create a database if it is the first time the application runs
 try:
     c.execute('''CREATE TABLE dice
                  (fname text,
@@ -42,52 +46,50 @@ try:
 except:
     print("table already exists")
 
-    #c.execute("INSERT INTO dice VALUES ('4','6','8', '10', '12', '20', '100')")
-    #conn.commit()
-
 c.execute('SELECT * FROM dice')
-    #print(c.fetchone())
-    #inserts database value into diceresult variable
+
+# Inserts database values into the diceresult variable
 diceresult = c.execute('SELECT * FROM dice').fetchall()
 print(diceresult)
 
-# MUISTETAAN KOMMENTOIDA KOODI
-# MUISTETAAN KOMMENTOIDA KOODI
-# MUISTETAAN KOMMENTOIDA KOODI
-# MUISTETAAN KOMMENTOIDA KOODI
-# MUISTETAAN KOMMENTOIDA KOODI
-
+# Informs the admin about the bot being online in command prompt
 @client.event
 async def on_ready():
     print(f'{client.user.name} is online!')
 
-
+# Shows the bot information
 @client.command()
 async def bot_info(ctx):
     embed = discord.Embed(title="DnD-Bot", description="Making DnD easier :)")
-    embed.add_field(name="Commands I react to:", value="!phb, !roll d4....")
+    embed.add_field(name="Commands I react to:", value="!play, !d4...")
     await ctx.send(embed=embed)
 
-
+# Gives the user a link to DnD player's handbook
 @client.command()
 async def phb(ctx):
     await ctx.send("A link to the player's handbook: http://orc-news.ru/dnd5eng.pdf")
 
+# Picks a random song from a list depending genre (mobile phone user friendly)
 @client.command()
 async def heroic(ctx):
     heroic = ["https://open.spotify.com/track/29gW6N4TtGhpkYmYwhRvDL?si=iGc9ASDUQu2VVa7QozaGRg", "https://open.spotify.com/track/4JtvyWkWQTPVcroZf8JJkp?si=N30P6Q_JT0CNnc8N0VBF9g", "https://open.spotify.com/track/2jn89xTHIVsy167uOmAewt?si=iVbs2iivT5eyu35MCqPKrA", "https://open.spotify.com/track/1YtHpYEbbfQQIyxXkdxEoW?si=zWzC7hnLSpSNc5nfj8nwvQ", "https://open.spotify.com/track/3pTNVDJpzaLxiZnbC18SMX?si=WWBjGMXqTDG19-FhbEp3SA", "https://open.spotify.com/track/2ZssT3XEX1cObqahy9YrQM?si=hplZhcrHRgCNyGT7-W6SjQ", "https://open.spotify.com/track/0G8iyOJFQ8Wvm4Fe6xjQdr?si=CjjUIecdRxyQ_Zy07muxAw", "https://open.spotify.com/track/2F9xBxKbx2M0pbgtSu8fLf?si=d6tLHZMyQSCoRlfoVsDr3w", "https://open.spotify.com/track/3GJZLvGXaVszYdSBLMtJFX?si=4uVSIjm5Tey0Ykvc3bYH4g", "https://open.spotify.com/track/2k2Pwkt3Fqowcve91PiH4g?si=wSJjbyoiTv6o_JISrRIMdQ", "https://open.spotify.com/track/1l2g97tNnO52U1IS0y9GRL?si=zaa7CBA3RlS2WUY4Bxadzw", "https://open.spotify.com/track/1No2I2TNhCXDNovL5O7ang?si=0dY850i8TVuC34l88yk4DA", "https://open.spotify.com/track/3jKkPcETVg1I9RR7ECgE4b?si=qSfGtzwHR4mtVESXNa66Gw"]
     await ctx.send(random.choice(heroic))
+# Another little list for a different genre
 
 @client.command()
 async def tavern(ctx):
     tavern = ["https://open.spotify.com/track/396qEVyZ1I7W6fNE12APdO?si=dI3xM_v9QcmT0lWeQ_WpSA", "https://open.spotify.com/track/4pW1ftcpCJt1VxbPwVknz0?si=mhyy92-RS7uijJpRYSJfQQ", "https://open.spotify.com/track/7z7WfdoT4qI16aXfWoNRlj?si=E_eVuNZIRrW-PlYMQBvRYw", "https://open.spotify.com/track/7Lp3BqKR2VE1NNd2LDuvzb?si=0ASpEeP3Tzi6K2UAVmZAzQ", "https://open.spotify.com/track/2TLO035tumZKpxxeDlKYQb?si=o72w9mXPQTSK7rGjMmXUhw", "https://open.spotify.com/track/1FdX2jpsp9Gt1rHxUROE6n?si=_-B6igUBRo6eFRa41TbAnQ", "https://open.spotify.com/track/1FV2g6zFu0ThzLMK4apEEy?si=hX6K-029S4STvdFPMap4Gg", "https://open.spotify.com/track/6ZBvQOuEp4ggTYAsqq0YFa?si=eB9uvq20QSSXxGZ4lmUJ4A", "https://open.spotify.com/track/3q79jp15s3gBLddLosTPP5?si=LrKwxK2ESZ2SqxHnwNPj8A", "https://open.spotify.com/track/08m0MIad094kPXhjwWi6Gu?si=LMzCgTbCS2SF7SdJ3V3Pxg"]
     await ctx.send(random.choice(tavern))
 
+# Prints all the results from the dice roll SQLite-database
 @client.command()
 async def alldice(ctx):
     diceresult = c.execute( 'SELECT * FROM dice').fetchall()
     await ctx.send(diceresult)
 
+# Commands to print 4-, 6-, 8-, 10-, 12-, 20- and 100 sided dice (the rest of the code below)
+# Chooses a random number between the given range
+# Inserts the rolled dice under the rollers discord username into the database
 @client.command()
 async def d4(ctx):
     d4 = list(range(1, 5))
@@ -162,12 +164,14 @@ async def d100(ctx):
     conn.commit()
     await ctx.send(d100result)
 
+# Command to invite the bot to the voice channel
 @client.command(pass_context=True, aliases=['j', 'joi'])
 async def join(ctx):
     global voice
     channel = ctx.message.author.voice.channel
     voice = get(client.voice_clients, guild=ctx.guild)
 
+# If the bot is connected to another voice channel, moves it to the wanted channel
     if voice and voice.is_connected():
         await voice.move_to(channel)
     else:
@@ -181,14 +185,17 @@ async def join(ctx):
         voice = await channel.connect()
         print(f"The bot has connected to {channel}\n")
 
+# Informs the users that the bot joined a channel
     await ctx.send(f"Joined {channel}")
 
-
+# Commands the bot to leave the voice channel
 @client.command(pass_context=True, aliases=['l', 'lea'])
 async def leave(ctx):
     channel = ctx.message.author.voice.channel
     voice = get(client.voice_clients, guild=ctx.guild)
 
+# Informs the users that the bot has left the channel and mentions the disconnected channel's name
+# If the bot is not in a voice channel and is commanded to leave, it sends a message to the channel about not being able to leave
     if voice and voice.is_connected():
         await voice.disconnect()
         print(f"The bot has left {channel}")
@@ -197,10 +204,11 @@ async def leave(ctx):
         print("Bot was told to leave voice channel, but was not in one")
         await ctx.send("Don't think I am in a voice channel")
 
-
+# Commands the bot to play the wanted Youtube-link with !play "--link--"
 @client.command(pass_context=True, aliases=['p', 'pla'])
 async def play(ctx, url: str):
 
+# Bot checks if an earlier queue exists and informs if no queue exists
     def check_queue():
 
         Queue_infile = os.path.isdir("./Queue")
@@ -211,7 +219,8 @@ async def play(ctx, url: str):
             try:
                 first_file = os.listdir(DIR)[0]
             except:
-                print("No songs in que!\n")
+# Bot clears the queue before starting to play a new link
+                print("No songs in queue!\n")
                 queues.clear()
                 return
             main_location = os.path.dirname(os.path.realpath(__file__))
@@ -226,7 +235,7 @@ async def play(ctx, url: str):
                 for file in os.listdir("./"):
                     if file.endswith(".mp3"):
                         os.rename(file, 'song.mp3')
-
+# Uses the ffmpeg-codec library to convert the link into MP3-file
                 voice.play(discord.FFmpegPCMAudio("song.mp3"),
                            after=lambda e: check_queue())
                 voice.source = discord.PCMVolumeTransformer(voice.source)
@@ -251,6 +260,7 @@ async def play(ctx, url: str):
         await ctx.send("ERROR: Music Playing")
         return
 
+# Defines a Queue-folder where the song.mp3 will later be added to
     Queue_infile = os.path.isdir("./Queue")
     try:
         Queue_folder = "./Queue"
@@ -264,6 +274,7 @@ async def play(ctx, url: str):
 
     voice = get(client.voice_clients, guild=ctx.guild)
 
+# youtubedl-settings to set the quality and the extraction for the played link
     ydl_opts = {
         'format': 'bestaudio/best',
         'quiet': True,
@@ -274,14 +285,13 @@ async def play(ctx, url: str):
         }],
     }
 
+# Informs the admin in the command prompt about starting to download the given link
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         print("Downloading audio now\n")
         ydl.download([url])
-    #except:
-    #    print("Error1")
-    #c_path = os.path.dirname(os.path.realpath(__file__))
-    #system("spotdl -f " + '"' + c_path + '"' + " -s " + url)
 
+# Takes the downloaded link and renames it to song.mp3
+# The rename is mandatory for the client to be able to play the link without knowing the name
     for file in os.listdir("./"):
         if file.endswith(".mp3"):
             name = file
@@ -293,16 +303,19 @@ async def play(ctx, url: str):
     voice.source = discord.PCMVolumeTransformer(voice.source)
     voice.source.volume = 0.05
 
+# Splits the link name to make it more readable and then informs the channel about the actual name of the played link
     nname = name.rsplit("-", 2)
     await ctx.send(f"Playing: {nname[0]}")
     print("Playing\n")
 
-
+# Commands the bot to pause the audio
 @client.command(pass_context=True, aliases=['pa', 'pau'])
 async def pause(ctx):
 
     voice = get(client.voice_clients, guild=ctx.guild)
 
+# The bot checks if the audio is played or not and if it is being played, pauses it
+# If an audio is not playing, the bot tells the channel about failed pause
     if voice and voice.is_playing():
         print("Song paused")
         voice.pause()
@@ -311,12 +324,13 @@ async def pause(ctx):
         print("Song is not playing, failed pause")
         await ctx.send("Song is not playing, failed pause")
 
-
+# Pause function to pause the currently played audio
 @client.command(pass_context=True, aliases=['r', 'res'])
 async def resume(ctx):
 
     voice = get(client.voice_clients, guild=ctx.guild)
 
+# If the audio is paused, resumes playing it
     if voice and voice.is_paused():
         print("Song resumed")
         voice.resume()
@@ -325,7 +339,7 @@ async def resume(ctx):
         print("Song is not paused")
         await ctx.send("Song is not paused")
 
-
+# Stop function to stop or skip the current played audio (skips the audio in case a queue exists)
 @client.command(pass_context=True, aliases=['s', 'sto'])
 async def stop(ctx):
 
@@ -343,6 +357,7 @@ async def stop(ctx):
 
 queues = {}
 
+# Commands the bot to queue next audio, adding it to the queue
 @client.command(pass_context=True, aliases=['q', 'que'])
 async def queue(ctx, url:str):
         Queue_infile = os.path.isdir("./Queue")
@@ -350,6 +365,7 @@ async def queue(ctx, url:str):
             os.mkdir("Queue")
         DIR = os.path.abspath(os.path.realpath("Queue"))
         q_num = len(os.listdir(DIR))
+# q_num shows the audio's position in queue
         q_num += 1
         add_queue = True
         while add_queue:
@@ -380,5 +396,5 @@ async def queue(ctx, url:str):
         print("Successfully added a song to que :)\n")
 
 client.run(token)
-#closes connection
+# Closes the database connection
 conn.close()
