@@ -8,7 +8,7 @@ import youtube_dl
 import os
 import random
 import asyncio
-
+import sqlite3
 from ctypes.util import find_library
 
 client = commands.Bot(command_prefix='!')
@@ -23,6 +23,34 @@ def read_token():
 token = read_token()
 
 dclient = Bot('!')
+
+#connection for database
+conn = sqlite3.connect('diceroll.db')
+c = conn.cursor()
+
+    #tries to create database if its the first time the application runs
+try:
+    c.execute('''CREATE TABLE dice
+                 (fname text,
+                 d4 int,
+                 d6 int,
+                 d8 int,
+                 d10 int,
+                 d12 int,
+                 d20 int,
+                 d100 int)''')
+except:
+    print("table already exists")
+
+    #c.execute("INSERT INTO dice VALUES ('4','6','8', '10', '12', '20', '100')")
+    #conn.commit()
+
+c.execute('SELECT * FROM dice')
+    #print(c.fetchone())
+    #inserts database value into diceresult variable
+diceresult = c.execute('SELECT * FROM dice').fetchall()
+print(diceresult)
+
 # MUISTETAAN KOMMENTOIDA KOODI
 # MUISTETAAN KOMMENTOIDA KOODI
 # MUISTETAAN KOMMENTOIDA KOODI
@@ -55,48 +83,78 @@ async def tavern(ctx):
     tavern = ["https://open.spotify.com/track/396qEVyZ1I7W6fNE12APdO?si=dI3xM_v9QcmT0lWeQ_WpSA", "https://open.spotify.com/track/4pW1ftcpCJt1VxbPwVknz0?si=mhyy92-RS7uijJpRYSJfQQ", "https://open.spotify.com/track/7z7WfdoT4qI16aXfWoNRlj?si=E_eVuNZIRrW-PlYMQBvRYw", "https://open.spotify.com/track/7Lp3BqKR2VE1NNd2LDuvzb?si=0ASpEeP3Tzi6K2UAVmZAzQ", "https://open.spotify.com/track/2TLO035tumZKpxxeDlKYQb?si=o72w9mXPQTSK7rGjMmXUhw", "https://open.spotify.com/track/1FdX2jpsp9Gt1rHxUROE6n?si=_-B6igUBRo6eFRa41TbAnQ", "https://open.spotify.com/track/1FV2g6zFu0ThzLMK4apEEy?si=hX6K-029S4STvdFPMap4Gg", "https://open.spotify.com/track/6ZBvQOuEp4ggTYAsqq0YFa?si=eB9uvq20QSSXxGZ4lmUJ4A", "https://open.spotify.com/track/3q79jp15s3gBLddLosTPP5?si=LrKwxK2ESZ2SqxHnwNPj8A", "https://open.spotify.com/track/08m0MIad094kPXhjwWi6Gu?si=LMzCgTbCS2SF7SdJ3V3Pxg"]
     await ctx.send(random.choice(tavern))
 
+@client.command()
+async def alldice(ctx):
+    diceresult = c.execute( 'SELECT * FROM dice').fetchall()
+    await ctx.send(diceresult)
 
 @client.command()
 async def d4(ctx):
     d4 = list(range(1, 5))
-    await ctx.send(random.choice(d4))
+    d4result = random.choice(d4)
+    fname = str(ctx.message.author)
+    c.execute("INSERT INTO dice(fname, d4) VALUES ('%s', '%d')"%(fname, d4result))
+    diceresult = c.execute( 'SELECT * FROM dice').fetchall()
+    conn.commit()
+    await ctx.send(d4result)
 
 
 @client.command()
 async def d6(ctx):
     d6 = list(range(1, 7))
-    await ctx.send(random.choice(d6))
+    d6result = random.choice(d6)
+    c.execute("INSERT INTO dice(fname, d6) VALUES ('%s', '%d')"%(fname, d6result))
+    diceresult = c.execute( 'SELECT * FROM dice').fetchall()
+    conn.commit()
+    await ctx.send(d6result)
 
 
 @client.command()
 async def d8(ctx):
     d8 = list(range(1, 9))
-    await ctx.send(random.choice(d8))
-
+    d8result = random.choice(d8)
+    c.execute("INSERT INTO dice(fname, d8) VALUES ('%s', '%d')"%(fname, d8result))
+    diceresult = c.execute( 'SELECT * FROM dice').fetchall()
+    conn.commit()
+    await ctx.send(d8result)
 
 @client.command()
 async def d10(ctx):
     d10 = list(range(1, 11))
-    await ctx.send(random.choice(d10))
+    d10result = random.choice(d10)
+    c.execute("INSERT INTO dice(fname, d10) VALUES ('%s', '%d')"%(fname, d10result))
+    diceresult = c.execute( 'SELECT * FROM dice').fetchall()
+    conn.commit()
+    await ctx.send(d10result)
 
 
 @client.command()
 async def d12(ctx):
     d12 = list(range(1, 13))
-    await ctx.send(random.choice(d12))
-
+    d12result = random.choice(d12)
+    c.execute("INSERT INTO dice(fname, d12) VALUES ('%s', '%d')"%(fname, d12result))
+    diceresult = c.execute( 'SELECT * FROM dice').fetchall()
+    conn.commit()
+    await ctx.send(d12result)
 
 @client.command()
 async def d20(ctx):
     d20 = list(range(1, 21))
-    await ctx.send(random.choice(d20))
+    d20result = random.choice(d20)
+    c.execute("INSERT INTO dice(fname, d20) VALUES ('%s', '%d')"%(fname, d20result))
+    diceresult = c.execute( 'SELECT * FROM dice').fetchall()
+    conn.commit()
+    await ctx.send(d20result)
 
 
 @client.command()
 async def d100(ctx):
     d100 = list(range(1, 101))
-    await ctx.send(random.choice(d100))
-
+    d100result = random.choice(d100)
+    c.execute("INSERT INTO dice(fname, d100) VALUES ('%s', '%d')"%(fname, d100result))
+    diceresult = c.execute( 'SELECT * FROM dice').fetchall()
+    conn.commit()
+    await ctx.send(d100result)
 
 @client.command(pass_context=True, aliases=['j', 'joi'])
 async def join(ctx):
@@ -315,26 +373,6 @@ async def queue(ctx, url:str):
 
         print("Successfully added a song to que :)\n")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 client.run(token)
+#closes connection
+conn.close()
