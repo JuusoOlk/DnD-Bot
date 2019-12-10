@@ -103,6 +103,7 @@ async def d4(ctx):
 async def d6(ctx):
     d6 = list(range(1, 7))
     d6result = random.choice(d6)
+    fname = str(ctx.message.author)
     c.execute("INSERT INTO dice(fname, d6) VALUES ('%s', '%d')"%(fname, d6result))
     diceresult = c.execute( 'SELECT * FROM dice').fetchall()
     conn.commit()
@@ -113,6 +114,7 @@ async def d6(ctx):
 async def d8(ctx):
     d8 = list(range(1, 9))
     d8result = random.choice(d8)
+    fname = str(ctx.message.author)
     c.execute("INSERT INTO dice(fname, d8) VALUES ('%s', '%d')"%(fname, d8result))
     diceresult = c.execute( 'SELECT * FROM dice').fetchall()
     conn.commit()
@@ -122,6 +124,7 @@ async def d8(ctx):
 async def d10(ctx):
     d10 = list(range(1, 11))
     d10result = random.choice(d10)
+    fname = str(ctx.message.author)
     c.execute("INSERT INTO dice(fname, d10) VALUES ('%s', '%d')"%(fname, d10result))
     diceresult = c.execute( 'SELECT * FROM dice').fetchall()
     conn.commit()
@@ -132,6 +135,7 @@ async def d10(ctx):
 async def d12(ctx):
     d12 = list(range(1, 13))
     d12result = random.choice(d12)
+    fname = str(ctx.message.author)
     c.execute("INSERT INTO dice(fname, d12) VALUES ('%s', '%d')"%(fname, d12result))
     diceresult = c.execute( 'SELECT * FROM dice').fetchall()
     conn.commit()
@@ -141,6 +145,7 @@ async def d12(ctx):
 async def d20(ctx):
     d20 = list(range(1, 21))
     d20result = random.choice(d20)
+    fname = str(ctx.message.author)
     c.execute("INSERT INTO dice(fname, d20) VALUES ('%s', '%d')"%(fname, d20result))
     diceresult = c.execute( 'SELECT * FROM dice').fetchall()
     conn.commit()
@@ -151,6 +156,7 @@ async def d20(ctx):
 async def d100(ctx):
     d100 = list(range(1, 101))
     d100result = random.choice(d100)
+    fname = str(ctx.message.author)
     c.execute("INSERT INTO dice(fname, d100) VALUES ('%s', '%d')"%(fname, d100result))
     diceresult = c.execute( 'SELECT * FROM dice').fetchall()
     conn.commit()
